@@ -1,6 +1,6 @@
 <?php
 
-namespace markroland\Ontraport;
+namespace Ontraport;
 
 /**
  *
