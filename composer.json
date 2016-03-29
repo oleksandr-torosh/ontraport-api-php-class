@@ -1,5 +1,5 @@
 {
-    "name": "markroland/ontraport",
+    "name": "oleksandr-torosh/ontraport-api-php-class",
     "description": "A PHP class that acts as wrapper for the Ontraport API",
     "keywords": ["ontraport","api"],
     "homepage": "https://github.com/markroland/ontraport-api-php-class",
@@ -15,7 +15,7 @@
     },
     "autoload": {
        "psr-4": {
-            "markroland\\Ontraport\\": "src/"
+            "Ontraport\\": "src/"
         }
     }
 }
