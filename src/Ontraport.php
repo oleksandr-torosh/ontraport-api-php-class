@@ -36,7 +36,7 @@ class Ontraport
      * A variable to hold debugging information
      * @var array
      */
-    public $debug = array();
+    public $debug = [];
 
     /**
      * Class constructor
@@ -71,9 +71,9 @@ class Ontraport
         }
 
         // Set the request type and construct the POST request
-        $postdata = "appid=".$this->ontraport_appid."&key=".$this->ontraport_key."&return_id=1";
-        $postdata .= '&reqType='.$api_method;
-        $postdata .= '&data='.$data;
+        $postdata = "appid=" . $this->ontraport_appid . "&key=" . $this->ontraport_key . "&return_id=1";
+        $postdata .= '&reqType=' . $api_method;
+        $postdata .= '&data=' . $data;
 
         // Set request
         switch ($apiMethod[0]) {
@@ -91,7 +91,7 @@ class Ontraport
         }
 
         // Debugging output
-        $this->debug = array();
+        $this->debug = [];
         $this->debug['HTTP Method'] = $http_method;
         $this->debug['Request URL'] = $request_url;
 
@@ -117,7 +117,7 @@ class Ontraport
         if (!empty($postdata)) {
 
             curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Length: '.strlen($postdata)));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Length: ' . strlen($postdata)]);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
 
             // Debugging output
@@ -161,19 +161,19 @@ class Ontraport
      * Key-value pairs will be used as XML key-values
      * @return Returns a sendRequest response
      */
-    public function addContact(array $sections = array())
+    public function addContact(array $sections = [])
     {
 
         // Build XML
-        $data  = '<contact>'."\n";
+        $data = '<contact>' . "\n";
         foreach ($sections as $group_tag_name => $section) {
-            $data .= "\t".'<Group_Tag name="'.$group_tag_name.'">'."\n";
+            $data .= "\t" . '<Group_Tag name="' . $group_tag_name . '">' . "\n";
             foreach ($section as $key => $val) {
-                $data .= "\t\t".'<field name="'.$key.'">'.htmlspecialchars($val).'</field>'."\n";
+                $data .= "\t\t" . '<field name="' . $key . '">' . htmlspecialchars($val) . '</field>' . "\n";
             }
-            $data .= "\t".'</Group_Tag>'."\n";
+            $data .= "\t" . '</Group_Tag>' . "\n";
         }
-        $data .= '</contact>'."\n";
+        $data .= '</contact>' . "\n";
 
         // Encoded data
         $data = urlencode(urlencode($data));
@@ -192,7 +192,7 @@ class Ontraport
     {
         if ($contactId) {
             // Build XML
-            $data = '<contact_id>' . $contactId . '</contact_id>'."\n";
+            $data = '<contact_id>' . $contactId . '</contact_id>' . "\n";
 
             // Encoded data
             $data = urlencode(urlencode($data));
@@ -210,13 +210,13 @@ class Ontraport
      * @var array $contact_id an array of contact_ids to fetch.
      * @return Returns a sendRequest response
      */
-    public function getContacts(array $contactIds = array())
+    public function getContacts(array $contactIds = [])
     {
         if (!empty($contactIds)) {
             // Build XML
             $data = '';
             foreach ($contactIds as $contactId) {
-                $data .= '<contact_id>' . $contactId . '</contact_id>'."\n";
+                $data .= '<contact_id>' . $contactId . '</contact_id>' . "\n";
             }
 
             // Encoded data
@@ -237,19 +237,19 @@ class Ontraport
      * Key-value pairs will be used as XML key-values
      * @return Returns a sendRequest response
      */
-    public function updateContact($id, array $sections = array())
+    public function updateContact($id, array $sections = [])
     {
 
         // Build XML
-        $data  = '<contact id="' . $id . '">'."\n";
+        $data = '<contact id="' . $id . '">' . "\n";
         foreach ($sections as $group_tag_name => $section) {
-            $data .= "\t".'<Group_Tag name="'.$group_tag_name.'">'."\n";
+            $data .= "\t" . '<Group_Tag name="' . $group_tag_name . '">' . "\n";
             foreach ($section as $key => $val) {
-                $data .= "\t\t".'<field name="'.$key.'">'.htmlspecialchars($val).'</field>'."\n";
+                $data .= "\t\t" . '<field name="' . $key . '">' . htmlspecialchars($val) . '</field>' . "\n";
             }
-            $data .= "\t".'</Group_Tag>'."\n";
+            $data .= "\t" . '</Group_Tag>' . "\n";
         }
-        $data .= '</contact>'."\n";
+        $data .= '</contact>' . "\n";
 
         // Encoded data
         $data = urlencode(urlencode($data));
@@ -269,17 +269,17 @@ class Ontraport
     {
 
         // Build XML
-        $data  = '<search>'."\n";
+        $data = '<search>' . "\n";
         foreach ($equations as $equation) {
             if (isset($equation['field']) && isset($equation['op']) && isset($equation['value'])) {
-                $data .= "\t".'<equation>'."\n";
-                $data .= "\t\t".'<field>' . $equation['field'] . '</field>'."\n";
-                $data .= "\t\t".'<op>' . $equation['op'] . '</op>'."\n";
-                $data .= "\t\t".'<value>' . $equation['value'] . '</value>'."\n";
-                $data .= "\t".'</equation>'."\n";
+                $data .= "\t" . '<equation>' . "\n";
+                $data .= "\t\t" . '<field>' . $equation['field'] . '</field>' . "\n";
+                $data .= "\t\t" . '<op>' . $equation['op'] . '</op>' . "\n";
+                $data .= "\t\t" . '<value>' . $equation['value'] . '</value>' . "\n";
+                $data .= "\t" . '</equation>' . "\n";
             }
         }
-        $data .= '</search>'."\n";
+        $data .= '</search>' . "\n";
 
         // Encoded data
         $data = urlencode(urlencode($data));
@@ -288,7 +288,31 @@ class Ontraport
         return $this->sendRequest('contacts_search', 'POST', $data);
     }
 
+    /**
+     * Create Section and Custom Fields
+     * @param array $sections
+     * @return string
+     */
+    public function addSection(array $sections = [])
+    {
+        // Build XML
+        $data = '<data>' . "\n";
+        foreach ($sections as $group_tag_name => $section) {
+            $data .= "\t" . '<Group_Tag name="' . $group_tag_name . '">' . "\n";
+            foreach ($section as $key => $val) {
+                $data .= "\t\t" . '<field name="' . $key . '" type="' . $val . '"></field>' . "\n";
+            }
+            $data .= "\t" . '</Group_Tag>' . "\n";
+        }
+        $data .= '</data>' . "\n";
 
+        // Encoded data
+        $data = urlencode(urlencode($data));
+
+        // Send Request
+        return $this->sendRequest('add_section', 'POST', $data);
+
+    }
 
     /**
      * Add a Product Sale
@@ -298,13 +322,13 @@ class Ontraport
      * Key-value pairs will be used as XML key-values
      * @return Returns a sendRequest response
      */
-    public function saleProduct($contactId, $productId, array $optionalFields = array())
+    public function saleProduct($contactId, $productId, array $optionalFields = [])
     {
 
         // Build XML
-        $data  = '<purchases contact_id="' . $contactId . '" product_id="' . $productId . '">'."\n";
+        $data = '<purchases contact_id="' . $contactId . '" product_id="' . $productId . '">' . "\n";
         foreach ($optionalFields as $fieldName => $fieldValue) {
-            $data .= "\t".'<field name="' . $fieldName . '">' . $fieldValue . '</field>'."\n";
+            $data .= "\t" . '<field name="' . $fieldName . '">' . $fieldValue . '</field>' . "\n";
         }
 
         // Encoded data
@@ -335,7 +359,7 @@ class Ontraport
         }
 
         // Build XML
-        $data = array();
+        $data = [];
         $data['contact_id'] = $contactId;
         $data['date'] = $date;
         $data['products'] = $products;
@@ -357,17 +381,17 @@ class Ontraport
     {
 
         // Build XML
-        $data  = '<search>'."\n";
+        $data = '<search>' . "\n";
         foreach ($equations as $equation) {
             if (isset($equation['field']) && isset($equation['op']) && isset($equation['value'])) {
-                $data .= "\t".'<equation>'."\n";
-                $data .= "\t\t".'<field>' . $equation['field'] . '</field>'."\n";
-                $data .= "\t\t".'<op>' . $equation['op'] . '</op>'."\n";
-                $data .= "\t\t".'<value>' . htmlspecialchars($equation['value']) . '</value>'."\n";
-                $data .= "\t".'</equation>'."\n";
+                $data .= "\t" . '<equation>' . "\n";
+                $data .= "\t\t" . '<field>' . $equation['field'] . '</field>' . "\n";
+                $data .= "\t\t" . '<op>' . $equation['op'] . '</op>' . "\n";
+                $data .= "\t\t" . '<value>' . htmlspecialchars($equation['value']) . '</value>' . "\n";
+                $data .= "\t" . '</equation>' . "\n";
             }
         }
-        $data .= '</search>'."\n";
+        $data .= '</search>' . "\n";
 
         // Encoded data
         $data = urlencode(urlencode($data));
@@ -386,17 +410,17 @@ class Ontraport
     {
 
         // Build XML
-        $data  = '<search>'."\n";
+        $data = '<search>' . "\n";
         foreach ($equations as $equation) {
             if (isset($equation['field']) && isset($equation['op']) && isset($equation['value'])) {
-                $data .= "\t".'<equation>'."\n";
-                $data .= "\t\t".'<field>' . $equation['field'] . '</field>'."\n";
-                $data .= "\t\t".'<op>' . $equation['op'] . '</op>'."\n";
-                $data .= "\t\t".'<value>' . htmlspecialchars($equation['value']) . '</value>'."\n";
-                $data .= "\t".'</equation>'."\n";
+                $data .= "\t" . '<equation>' . "\n";
+                $data .= "\t\t" . '<field>' . $equation['field'] . '</field>' . "\n";
+                $data .= "\t\t" . '<op>' . $equation['op'] . '</op>' . "\n";
+                $data .= "\t\t" . '<value>' . htmlspecialchars($equation['value']) . '</value>' . "\n";
+                $data .= "\t" . '</equation>' . "\n";
             }
         }
-        $data .= '</search>'."\n";
+        $data .= '</search>' . "\n";
 
         // Encoded data
         $data = urlencode(urlencode($data));
